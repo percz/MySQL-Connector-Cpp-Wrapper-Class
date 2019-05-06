@@ -1,15 +1,16 @@
 /* 
- * File:   mysqlconn_wrapper.h
- * Author: Eduardo Casas (www.eduardocasas.com)
+ * File:   mysqlconn_wrapper.cpp
  *
- * Created on February 24, 2013, 5:07 PM
+ * This is a wrapper class for the MySQL Connector/C++ Library
+ * Developed from the wrapper by Eduardo Casas (www.eduardocasas.com & https://github.com/eduardocasas/MySQL-Connector-Cpp-Wrapper-Class)
+ * Various code added and removed; Alan Childs.
+ *
  */
 
 #ifndef MYSQLCONN_WRAPPER_H
 #define	MYSQLCONN_WRAPPER_H
 
 #include "mysql_connection.h"
-	
 #include <cppconn/driver.h>
 #include <cppconn/exception.h>
 #include <cppconn/resultset.h>
@@ -19,39 +20,29 @@ using namespace std;
 
 class MySQLConnWrapper
 {
-          
     public:
         
-        /* Your MySQL server settings */
-        MySQLConnWrapper()
-        {
-            host     = "tcp://127.0.0.1:3306";
-            user     = "root";
-            password = "";
-        };
-        ~MySQLConnWrapper();
+        /* Example MySQL server settings */
+    	string addr = "localhost:3306";
+    	string user = "user";
+    	string password = "pass";
+
+	~MySQLConnWrapper();
         void manageException(sql::SQLException& e);
         void connect();
         void switchDb(const string& db_name);
-        void prepare(const string& query);
-        void setInt(const int& num, const int& data);
-        void setString(const int& num, const string& data);
-        void execute(const string& query = "");
+        void execute(const string& query);
+        void query(const string& query);
+        void fin();
         bool fetch();
         string print(const string& field);
         string print(const int& index);
 
     private:
-        
-        string host;
-        string user;
-        string password;
-        sql::Driver* driver;
-        sql::Connection* con;
-        sql::Statement* stmt;
-        sql::PreparedStatement* prep_stmt;
-        sql::ResultSet* res;
-
+        sql::Driver *driver = get_driver_instance();
+        sql::Connection *con;
+        sql::Statement *stmt;
+        sql::ResultSet *res;
 };
 
 
